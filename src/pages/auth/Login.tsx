@@ -18,23 +18,13 @@ export default function Login() {
       if (event === 'SIGNED_OUT') {
         setError(null);
       }
+      if (event === 'USER_UPDATED' && !session) {
+        setError("Error al iniciar sesión. Por favor, intenta de nuevo.");
+      }
     });
 
     return () => subscription.unsubscribe();
   }, [navigate]);
-
-  const handleError = (error: AuthError) => {
-    switch (error.message) {
-      case "Invalid login credentials":
-        setError("Email o contraseña incorrectos. Por favor, verifica tus credenciales.");
-        break;
-      case "Email not confirmed":
-        setError("Por favor, verifica tu correo electrónico antes de iniciar sesión.");
-        break;
-      default:
-        setError(error.message);
-    }
-  };
 
   return (
     <div className="max-w-md mx-auto mt-20 p-6 bg-white rounded-lg shadow-md">
@@ -55,7 +45,6 @@ export default function Login() {
         }}
         providers={[]}
         theme="light"
-        onError={handleError}
       />
     </div>
   );
