@@ -15,9 +15,15 @@ export function OrganizationForm() {
     resolver: zodResolver(organizationFormSchema),
     defaultValues: {
       name: "",
+      organization_type_id: "",
       size: "medium",
       email: "",
-      organization_type_id: "",
+      phone: "",
+      address: "",
+      city: "",
+      country: "",
+      tax_id: "",
+      website: "",
     },
   });
 
@@ -36,18 +42,18 @@ export function OrganizationForm() {
     try {
       const { error } = await supabase
         .from("organizations")
-        .insert({
+        .insert([{
           name: values.name,
           organization_type_id: values.organization_type_id,
           size: values.size,
           email: values.email,
-          phone: values.phone,
-          address: values.address,
-          city: values.city,
-          country: values.country,
-          tax_id: values.tax_id,
-          website: values.website,
-        });
+          phone: values.phone || null,
+          address: values.address || null,
+          city: values.city || null,
+          country: values.country || null,
+          tax_id: values.tax_id || null,
+          website: values.website || null,
+        }]);
       
       if (error) throw error;
       
