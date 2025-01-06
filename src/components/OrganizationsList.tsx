@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import {
   Table,
@@ -8,9 +8,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Building2, Loader2 } from "lucide-react";
+import { Building2, Loader2, Trash2 } from "lucide-react";
+import { Button } from "./ui/button";
+import { toast } from "sonner";
 
 export function OrganizationsList() {
+  const queryClient = useQueryClient();
+  
   const { data: organizations, isLoading } = useQuery({
     queryKey: ["organizations"],
     queryFn: async () => {
@@ -22,6 +26,23 @@ export function OrganizationsList() {
         `);
       if (error) throw error;
       return data;
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from("organizations")
+        .delete()
+        .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["organizations"] });
+      toast.success("Organización eliminada exitosamente");
+    },
+    onError: () => {
+      toast.error("Error al eliminar la organización");
     },
   });
 
@@ -44,12 +65,13 @@ export function OrganizationsList() {
             <TableHead>Email</TableHead>
             <TableHead>Ciudad</TableHead>
             <TableHead>País</TableHead>
+            <TableHead>Acciones</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {organizations?.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={6} className="text-center">
+              <TableCell colSpan={7} className="text-center">
                 <div className="flex flex-col items-center gap-2 py-4">
                   <Building2 className="h-8 w-8 text-muted-foreground" />
                   <p className="text-sm text-muted-foreground">
@@ -67,6 +89,15 @@ export function OrganizationsList() {
                 <TableCell>{org.email}</TableCell>
                 <TableCell>{org.city}</TableCell>
                 <TableCell>{org.country}</TableCell>
+                <TableCell>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => deleteMutation.mutate(org.id)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </TableCell>
               </TableRow>
             ))
           )}
