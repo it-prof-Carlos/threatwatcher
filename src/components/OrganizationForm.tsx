@@ -2,18 +2,22 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { OrganizationFormFields } from "./forms/OrganizationFormFields";
 import { organizationFormSchema, type OrganizationFormValues } from "./forms/types";
 
 export function OrganizationForm() {
+  const queryClient = useQueryClient();
+  
   const form = useForm<OrganizationFormValues>({
     resolver: zodResolver(organizationFormSchema),
     defaultValues: {
       name: "",
       size: "medium",
+      email: "",
+      organization_type_id: "",
     },
   });
 
@@ -32,9 +36,22 @@ export function OrganizationForm() {
     try {
       const { error } = await supabase
         .from("organizations")
-        .insert(values);
+        .insert({
+          name: values.name,
+          organization_type_id: values.organization_type_id,
+          size: values.size,
+          email: values.email,
+          phone: values.phone,
+          address: values.address,
+          city: values.city,
+          country: values.country,
+          tax_id: values.tax_id,
+          website: values.website,
+        });
       
       if (error) throw error;
+      
+      queryClient.invalidateQueries({ queryKey: ["organizations"] });
       toast.success("Organización creada exitosamente");
       form.reset();
     } catch (error) {

@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const organizationFormSchema = z.object({
   name: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
-  organization_type_id: z.string().uuid(),
+  organization_type_id: z.string().uuid("Debe seleccionar un tipo de organización"),
   size: z.enum(["small", "medium", "large"]),
   email: z.string().email("Email inválido"),
   phone: z.string().optional(),
@@ -10,7 +10,7 @@ export const organizationFormSchema = z.object({
   city: z.string().optional(),
   country: z.string().optional(),
   tax_id: z.string().optional(),
-  website: z.string().url().optional(),
+  website: z.string().url("URL inválida").optional(),
 });
 
 export type OrganizationFormValues = z.infer<typeof organizationFormSchema>;
