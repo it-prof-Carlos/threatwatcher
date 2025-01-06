@@ -9,7 +9,175 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      "Control y Mitigacion  Seg en Aplicaciones Web": {
+        Row: {
+          "Actualización de Seguridad Completada": number | null
+          "Alertas Recientes": number | null
+          "Amenazas Criticas": number
+          "Amenazas Detectadas": number | null
+          "Amenazas Mitigadas": number | null
+          "Amenazas Pendientes": number | null
+          "Mapa Global de Amenazas":
+            | Database["public"]["Enums"]["organization_size"]
+            | null
+          "Seg Aplicaciones Web Control de Amenazas": number
+          "Trafico Inusual Detectado": number | null
+        }
+        Insert: {
+          "Actualización de Seguridad Completada"?: number | null
+          "Alertas Recientes"?: number | null
+          "Amenazas Criticas": number
+          "Amenazas Detectadas"?: number | null
+          "Amenazas Mitigadas"?: number | null
+          "Amenazas Pendientes"?: number | null
+          "Mapa Global de Amenazas"?:
+            | Database["public"]["Enums"]["organization_size"]
+            | null
+          "Seg Aplicaciones Web Control de Amenazas"?: number
+          "Trafico Inusual Detectado"?: number | null
+        }
+        Update: {
+          "Actualización de Seguridad Completada"?: number | null
+          "Alertas Recientes"?: number | null
+          "Amenazas Criticas"?: number
+          "Amenazas Detectadas"?: number | null
+          "Amenazas Mitigadas"?: number | null
+          "Amenazas Pendientes"?: number | null
+          "Mapa Global de Amenazas"?:
+            | Database["public"]["Enums"]["organization_size"]
+            | null
+          "Seg Aplicaciones Web Control de Amenazas"?: number
+          "Trafico Inusual Detectado"?: number | null
+        }
+        Relationships: []
+      }
+      organization_contacts: {
+        Row: {
+          created_at: string
+          email: string
+          first_name: string
+          id: string
+          is_primary: boolean | null
+          last_name: string
+          organization_id: string
+          phone: string | null
+          position: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          first_name: string
+          id?: string
+          is_primary?: boolean | null
+          last_name: string
+          organization_id: string
+          phone?: string | null
+          position?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          first_name?: string
+          id?: string
+          is_primary?: boolean | null
+          last_name?: string
+          organization_id?: string
+          phone?: string | null
+          position?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_contacts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organization_types: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      organizations: {
+        Row: {
+          address: string | null
+          city: string | null
+          country: string | null
+          created_at: string
+          email: string
+          id: string
+          name: string
+          organization_type_id: string
+          phone: string | null
+          size: Database["public"]["Enums"]["organization_size"]
+          tax_id: string | null
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          name: string
+          organization_type_id: string
+          phone?: string | null
+          size: Database["public"]["Enums"]["organization_size"]
+          tax_id?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+          organization_type_id?: string
+          phone?: string | null
+          size?: Database["public"]["Enums"]["organization_size"]
+          tax_id?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organizations_organization_type_id_fkey"
+            columns: ["organization_type_id"]
+            isOneToOne: false
+            referencedRelation: "organization_types"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +186,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      organization_size: "small" | "medium" | "large"
     }
     CompositeTypes: {
       [_ in never]: never
